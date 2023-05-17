@@ -1,5 +1,7 @@
 # multiset
 
+![build status](https://github.com/p1ck0/multiset/actions/workflows/go.yml/badge.svg)
+
 Tool for doing multiple request on multiple servers easier.
 
 ## Installation
