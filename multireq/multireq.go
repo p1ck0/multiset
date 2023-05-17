@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/p1ck0/multiset/entity"
 	"github.com/p1ck0/multiset/log"
@@ -15,7 +16,13 @@ import (
 func SendMultiReq(ctx context.Context, requests []entity.Request) {
 	logger := log.LoggerFromContext(ctx)
 	for _, r := range requests {
-		request(ctx, r)
+		select {
+		case <-ctx.Done():
+			logger.Info("SHUTDOWN")
+			return
+		default:
+			request(ctx, r)
+		}
 	}
 
 	logger.Info("DONE")
@@ -25,11 +32,17 @@ func SendMultiReqAsync(ctx context.Context, requests []entity.Request) {
 	logger := log.LoggerFromContext(ctx)
 	var wg sync.WaitGroup
 	for _, r := range requests {
-		wg.Add(1)
-		go func(r entity.Request) {
-			defer wg.Done()
-			request(ctx, r)
-		}(r)
+		select {
+		case <-ctx.Done():
+			logger.Info("SHUTDOWN")
+			return
+		default:
+			wg.Add(1)
+			go func(r entity.Request) {
+				defer wg.Done()
+				request(ctx, r)
+			}(r)
+		}
 	}
 	wg.Wait()
 	logger.Info("DONE")
@@ -47,6 +60,7 @@ func request(ctx context.Context, r entity.Request) {
 
 	request.Header = r.Headers
 	logger.Info("SENDING REQUEST ON " + r.URL)
+	time.Sleep(time.Second * 5)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
 		logger.Error("could not send request on " + r.URL)

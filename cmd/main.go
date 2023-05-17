@@ -4,6 +4,8 @@ import (
 	"context"
 	"flag"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/p1ck0/multiset/log"
 	"github.com/p1ck0/multiset/multireq"
@@ -37,7 +39,8 @@ func main() {
 	}
 	logger.Info("PARSE DONE")
 
-	ctx := log.LoggerWithContext(context.Background(), logger)
+	ctx, stop := signal.NotifyContext(log.LoggerWithContext(context.Background(), logger), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
 	if async {
 		logger.Info("START SEND ASYNC MULTI REQ")
