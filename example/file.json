@@ -1,0 +1,34 @@
+{
+    "auto_complete": {
+        "body": {
+            "enable": true,
+            "type": "auto"
+        },
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "method": "POST"
+    },
+    "requests": [
+        {
+            "url": "http://localhost:8080/api/test",
+            "headers": {
+                "Authorization": "Token 124"
+            },
+            "body": {
+                "name": "test1"
+            }
+        },
+        {
+            "method": "PUT",
+            "url": "http://localhost:8081/api/test",
+            "headers": {
+                "Authorization": "Token 123"
+            },
+            "body": {
+                "name": "test2",
+                "enable": false
+            }
+        }
+    ]
+}
