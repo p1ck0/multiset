@@ -6,6 +6,12 @@ Tool for doing multiple request on multiple servers easier.
 
 ## Installation
 
+### Go
+```bash
+$ go install github.com/p1ck0/multiset@latest
+```
+
+### Build
 ```bash
 $ git clone https://github.com/p1ck0/multiset
 $ cd multiset
