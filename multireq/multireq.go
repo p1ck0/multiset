@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/p1ck0/multiset/entity"
 	"github.com/p1ck0/multiset/log"
@@ -50,7 +49,7 @@ func SendMultiReqAsync(ctx context.Context, requests []entity.Request) {
 
 func request(ctx context.Context, r entity.Request) {
 	logger := log.LoggerFromContext(ctx)
-	logger.Info(fmt.Sprintf("METHOD: %s | URL: %s | HEADERS: %s | BODY: %s", r.Method, r.URL, r.Headers, r.Body))
+	logger.Debug(fmt.Sprintf("METHOD: %s | URL: %s | HEADERS: %s | BODY: %s", r.Method, r.URL, r.Headers, r.Body))
 	bodyReader := bytes.NewReader(r.Body)
 	request, err := http.NewRequestWithContext(ctx, r.Method, r.URL, bodyReader)
 	if err != nil {
@@ -60,7 +59,6 @@ func request(ctx context.Context, r entity.Request) {
 
 	request.Header = r.Headers
 	logger.Info("SENDING REQUEST ON " + r.URL)
-	time.Sleep(time.Second * 5)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
 		logger.Error("could not send request on " + r.URL)

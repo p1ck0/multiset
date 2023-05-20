@@ -15,11 +15,13 @@ import (
 func main() {
 	var file string
 	var async bool
+	var debug bool
 	flag.StringVar(&file, "f", "", "file to read")
 	flag.BoolVar(&async, "a", false, "async mode")
+	flag.BoolVar(&debug, "d", false, "debug mode")
 	flag.Parse()
 
-	logger := log.New()
+	logger := log.New(debug)
 	if file == "" || file[len(file)-5:] != ".json" {
 		logger.Error("no file specified")
 		return
@@ -31,13 +33,13 @@ func main() {
 		return
 	}
 
-	logger.Info("START PARSE")
+	logger.Debug("START PARSE")
 	requests, err := parser.Parse(content)
 	if err != nil {
 		logger.Error("could not parse file")
 		return
 	}
-	logger.Info("PARSE DONE")
+	logger.Debug("PARSE DONE")
 
 	ctx, stop := signal.NotifyContext(log.LoggerWithContext(context.Background(), logger), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
