@@ -9,7 +9,7 @@ import (
 )
 
 func TestLogCtx(t *testing.T) {
-	logger := log.New()
+	logger := log.New(true)
 
 	ctx := log.LoggerWithContext(context.Background(), logger)
 
