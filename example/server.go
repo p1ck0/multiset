@@ -25,7 +25,9 @@ func main() {
 		fmt.Println("METHOD:", r.Method)
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+		if _, err := w.Write([]byte("ok")); err != nil {
+			log.Fatal(err)
+		}
 	}))
 	server := http.Server{
 		Addr:    ":" + port,
@@ -34,5 +36,7 @@ func main() {
 
 	fmt.Println("Listening on port", port)
 
-	server.ListenAndServe()
+	if err := server.ListenAndServe(); err != nil {
+		log.Fatal(err)
+	}
 }
