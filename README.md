@@ -23,6 +23,7 @@ $ make build
 ```
 Usage of multiset:
   -a    async mode
+  -d    debug mode
   -f string
         file to read
 ```
