@@ -1,7 +1,5 @@
 package entity
 
-import "sync"
-
 type Config struct {
 	AutoComplete AutoComplete  `json:"auto_complete"`
 	RequestsDesc []RequestDesc `json:"requests"`
@@ -22,15 +20,18 @@ type RequestDesc struct {
 }
 
 func (r *RequestDesc) Complete(method string, url string, headers map[string]string, body map[string]any) {
-	var mut sync.Mutex
-	mut.Lock()
+	if r.Headers == nil {
+		r.Headers = make(map[string]string, len(headers))
+	}
 	for k, v := range headers {
 		r.Headers[k] = v
+	}
+	if r.Body == nil {
+		r.Body = make(map[string]any, len(body))
 	}
 	for k, v := range body {
 		r.Body[k] = v
 	}
-	mut.Unlock()
 	if len(method) > 0 {
 		r.Method = method
 	}
